@@ -12,6 +12,8 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class GameRenderer implements Renderer {
 
+    //private GameObject background = new GameObject();
+
     public GameRenderer() {
         super();
     }
