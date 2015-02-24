@@ -103,16 +103,34 @@ public class GameRenderer implements Renderer {
         // load the player mesh & texture
         player.loadTexture(gl, R.drawable.space_frigate_6_color);
         player.loadMesh(R.raw.space_frigate_6, 0);
-
+        //Render the player object
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
-        gl.glTranslatef(0.5f, 0.2f, 0.0f);
+        gl.glTranslatef(x, 0.2f, 0.0f);
+        gl.glRotatef(rot, 0.0f, 1.0f, 0.0f);
         gl.glRotatef(-90, 0.0f, 0.0f, 1.0f);
         gl.glRotatef(90, 1.0f, 0.0f, 0.0f);
         gl.glScalef(0.01f, 0.01f, 0.01f);
+
         gl.glMatrixMode(GL10.GL_TEXTURE);
         gl.glLoadIdentity();
+
         player.draw(gl);
+
+        // x-position
+        x += deltaX;
+        if (x < 0) { x = 0; Bank(0); }
+        if (x > 1) { x = 1; Bank(0); }
+        // rotation – when starting the banking animation (accelerating)
+        rot += deltaRotA;
+        if (rot >= 50) deltaRotA = 0;
+        if (rot <= -50) deltaRotA = 0;
+        // rotation – when finishing the banking animation (decelerating)
+        rot += deltaRotD;
+        if (deltaRotD < 0 && rot < 0 || deltaRotD > 0 && rot > 0) {
+            rot = 0;
+            deltaRotD = 0;
+        }
 
     }
 
