@@ -15,6 +15,8 @@ public class GameRenderer implements Renderer {
     private GameObject background = new GameObject();
     private float bgScroll = 0f;
 
+    private GameObject player = new GameObject();
+
     private float vertices[] = {
             0.0f, 0.0f, 0.0f,
             1.0f, 0.0f, 0.0f,
@@ -91,6 +93,20 @@ public class GameRenderer implements Renderer {
         gl.glEnable(GL10.GL_LIGHTING);
 
 //All other game drawing will be called here
+
+        // load the player mesh & texture
+        player.loadTexture(gl, R.drawable.space_frigate_6_color);
+        player.loadMesh(R.raw.space_frigate_6, 0);
+
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glTranslatef(0.5f, 0.2f, 0.0f);
+        gl.glRotatef(-90, 0.0f, 0.0f, 1.0f);
+        gl.glRotatef(90, 1.0f, 0.0f, 0.0f);
+        gl.glScalef(0.01f, 0.01f, 0.01f);
+        gl.glMatrixMode(GL10.GL_TEXTURE);
+        gl.glLoadIdentity();
+        player.draw(gl);
 
     }
 }
