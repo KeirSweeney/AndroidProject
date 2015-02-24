@@ -18,5 +18,9 @@ public class GameView extends GLSurfaceView {
 
     }
 
+    public void Bank(int val) {
+        renderer.Bank(val);
+    }
+
 
 }

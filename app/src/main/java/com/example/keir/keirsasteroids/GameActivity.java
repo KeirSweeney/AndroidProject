@@ -1,9 +1,12 @@
 package com.example.keir.keirsasteroids;
 
+import android.graphics.Point;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 
 
 public class GameActivity extends ActionBarActivity {
@@ -39,4 +42,31 @@ public class GameActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // get touch positions
+        float x = event.getX();
+        float y = event.getY();
+        // Get screen size
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int W = size.x;
+        int H = size.y;
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                if (y > H / 2)
+                    if(x < W / 2)
+                        view.Bank(-1);
+                    else
+                        view.Bank(1);
+                break;
+            case MotionEvent.ACTION_UP:
+                view.Bank(0);
+                break;
+        }
+        return false;
+    }
+
 }

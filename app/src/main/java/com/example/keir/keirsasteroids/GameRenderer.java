@@ -15,6 +15,12 @@ public class GameRenderer implements Renderer {
     private GameObject background = new GameObject();
     private float bgScroll = 0f;
 
+    private float x = 0.5f; // x position of player spacecraft
+    private float deltaX = 0f; // increase of x
+    private float rot = 0f; // rotation of player spacecraft
+    private float deltaRotA = 0f; // increase of rotation - when starting to bank
+    private float deltaRotD = 0f;
+
     private GameObject player = new GameObject();
 
     private float vertices[] = {
@@ -108,5 +114,17 @@ public class GameRenderer implements Renderer {
         gl.glLoadIdentity();
         player.draw(gl);
 
+    }
+
+    public void Bank(int val) {
+        deltaX = 0.04f * val;
+        deltaRotA = 10f * val;
+        if (val == 0)
+            if (rot > 0)
+                deltaRotD = -10;
+            else
+                deltaRotD = 10;
+        else
+            deltaRotD = 0;
     }
 }
