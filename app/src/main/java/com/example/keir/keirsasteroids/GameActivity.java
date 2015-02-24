@@ -20,10 +20,6 @@ public class GameActivity extends ActionBarActivity {
         view = new GameView(this);
         setContentView(view);
 
-
-
-
-
     }
 
 
