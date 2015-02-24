@@ -3,6 +3,11 @@ package com.example.keir.keirsasteroids;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -78,4 +83,63 @@ public class GameObject {
 
         bitmap.recycle();
     }
+    public void loadMesh(int meshResId, int meshIndex) {
+        // Open resource-based JSON file
+        InputStream is = GameView.context.getResources().openRawResource(meshResId);
+        try{
+            // read JSON file
+            int len = is.available();
+            byte[] b = new byte[len];
+            is.read(b);
+            // Parse JSON file
+            ByteBuffer byteBuf;
+            JSONObject json = new JSONObject(new String(b));
+            JSONArray meshes = json.getJSONArray("meshes");
+            JSONObject mesh = meshes.getJSONObject(meshIndex);
+            // Parse vertices: an array of floats
+            JSONArray vertices = mesh.getJSONArray("vertices");
+            byteBuf = ByteBuffer.allocateDirect(vertices.length() * 4);
+            byteBuf.order(ByteOrder.nativeOrder());
+            vertexBuffer = byteBuf.asFloatBuffer();
+            for (int i = 0; i < vertices.length(); i++)
+                vertexBuffer.put((float)vertices.getDouble(i));
+            vertexBuffer.position(0);
+            // Parse normals: an array of floats
+            JSONArray normals = mesh.getJSONArray("normals");
+            byteBuf = ByteBuffer.allocateDirect(normals.length() * 4);
+            byteBuf.order(ByteOrder.nativeOrder());
+            normalBuffer = byteBuf.asFloatBuffer();
+            for (int i = 0; i < normals.length(); i++)
+                normalBuffer.put((float)normals.getDouble(i));
+            normalBuffer.position(0); // Parse texturecoords: an array of (one) array of floats
+            JSONArray texturecoords =
+                    mesh.getJSONArray("texturecoords").getJSONArray(0);
+            byteBuf = ByteBuffer.allocateDirect(texturecoords.length() * 4);
+            byteBuf.order(ByteOrder.nativeOrder());
+            texturecoordsBuffer = byteBuf.asFloatBuffer();
+            for (int i = 0; i < texturecoords.length(); i++)
+                texturecoordsBuffer.put((float)texturecoords.getDouble(i));
+            texturecoordsBuffer.position(0);
+            // Parse faces: an array of arrays of 3 floats
+            JSONArray faces = mesh.getJSONArray("faces");
+            byteBuf = ByteBuffer.allocateDirect(faces.length() * 3 * 4);
+            byteBuf.order(ByteOrder.nativeOrder());
+            indexBuffer = byteBuf.asShortBuffer();
+            for (int i = 0; i < faces.length(); i++) {
+                indexBuffer.put((short) faces.getJSONArray(i).getInt(0));
+                indexBuffer.put((short) faces.getJSONArray(i).getInt(1));
+                indexBuffer.put((short) faces.getJSONArray(i).getInt(2));
+            }
+            indexBuffer.position(0);
+        } catch (IOException e) {
+        } catch (JSONException e) {
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+            }
+        }
+    }
+
+
 }
