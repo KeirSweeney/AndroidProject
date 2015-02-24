@@ -7,6 +7,7 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.widget.ImageView;
 
 
 public class GameActivity extends ActionBarActivity {
@@ -18,6 +19,11 @@ public class GameActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         view = new GameView(this);
         setContentView(view);
+
+
+
+
+
     }
 
 

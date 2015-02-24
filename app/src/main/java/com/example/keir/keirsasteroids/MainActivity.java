@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -17,11 +18,19 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         ImageButton start = (ImageButton)findViewById(R.id.btnStart);
+        start.setImageResource(R.drawable.start);
         ImageButton exit = (ImageButton)findViewById(R.id.btnExit);
+        exit.setImageResource(R.drawable.exit);
+
+        ImageView img = new ImageView(this);
+        img.setImageResource(R.drawable.android_hunter);
+
         start.getBackground().setAlpha(0);
         start.setHapticFeedbackEnabled(true);
+
         exit.getBackground().setAlpha(0);
         exit.setHapticFeedbackEnabled(true);
+
         start.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
