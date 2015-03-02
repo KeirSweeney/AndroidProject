@@ -18,17 +18,17 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         ImageButton start = (ImageButton)findViewById(R.id.btnStart);
-        start.setImageResource(R.drawable.start);
+        //start.setImageResource(R.drawable.start);
         ImageButton exit = (ImageButton)findViewById(R.id.btnExit);
-        exit.setImageResource(R.drawable.exit);
+        //exit.setImageResource(R.drawable.exit);
 
-        ImageView img = new ImageView(this);
-        img.setImageResource(R.drawable.android_hunter);
+       // ImageView img = new ImageView(this);
+        //img.setImageResource(R.drawable.android_hunter);
 
-        start.getBackground().setAlpha(0);
+        //start.getBackground().setAlpha(0);
         start.setHapticFeedbackEnabled(true);
 
-        exit.getBackground().setAlpha(0);
+        //exit.getBackground().setAlpha(0);
         exit.setHapticFeedbackEnabled(true);
 
         start.setOnClickListener(new View.OnClickListener(){
