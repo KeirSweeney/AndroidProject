@@ -1,6 +1,12 @@
 package com.example.keir.keirsasteroids;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Point;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Display;
@@ -10,8 +16,12 @@ import android.view.MotionEvent;
 import android.widget.ImageView;
 
 
-public class GameActivity extends ActionBarActivity {
+public class GameActivity extends ActionBarActivity implements SensorEventListener{
     private GameView view;
+
+    private SensorManager senSensorManager;
+    private Sensor senAccelerometer;
+
 
 
     @Override
@@ -20,7 +30,12 @@ public class GameActivity extends ActionBarActivity {
         view = new GameView(this);
         setContentView(view);
 
+        senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        senAccelerometer = senSensorManager.getDefaultSensor((Sensor.TYPE_ACCELEROMETER));
+        senSensorManager.registerListener(this,senAccelerometer,SensorManager.SENSOR_DELAY_NORMAL);
+
     }
+
 
 
     @Override
@@ -71,4 +86,23 @@ public class GameActivity extends ActionBarActivity {
         return false;
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    protected void onPause() {
+        super.onPause();
+        senSensorManager.unregisterListener(this);
+    }
+
+    protected void onResume(){
+        super.onResume();
+        senSensorManager.registerListener(this,senAccelerometer,senSensorManager.SENSOR_DELAY_NORMAL);
+    }
 }
