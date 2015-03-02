@@ -20,7 +20,10 @@
         <activity
             android:name=".GameActivity"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_game" >
+            android:label="@string/title_activity_game">
+            <activity android:name=".ui.phone.ScreenOnFlagActivity" />
+            <activity android:name=".ui.phone.ScreenOnXmlActivity" />
+            <activity android:name=".ui.phone.ScreenOnWakeLockActivity" />
         </activity>
     </application>
 

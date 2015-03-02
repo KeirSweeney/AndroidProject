@@ -9,6 +9,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +26,9 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
     private long lastUpdate = 0;
     private float last_x,last_y,last_z;
     private static final int SHAKE_THRESHOLD = 600;
+
+    public static float tiltX;
+    public static float tiltY;
 
 
 
@@ -69,6 +73,7 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
         // get touch positions
         float x = event.getX();
         float y = event.getY();
+
         // Get screen size
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -95,12 +100,26 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
         Sensor mySensor = event.sensor;
 
         if(mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            float x = event.values[0];
+            tiltX = event.values[0];
+            float absX = Math.abs(tiltX);
+            //Log.d("Game","absX = " + absX);
+
+            if(absX < 2.0f){
+                view.Bank(0);
+            }
+            else if(tiltX > 0) {
+                view.Bank(-1);
+            }
+            else{
+                view.Bank(+1);
+            }
+
+           /* float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
 
             long curTime = System.currentTimeMillis();
-            //keep shake code incase i decide to add some bomb or explosion when the phone is shaked.
+            //keep shake code in case i decide to add some bomb or explosion when the phone is shaked.
             if((curTime - lastUpdate) > 100){
                 long diffTime = (curTime - lastUpdate);
                 lastUpdate = curTime;
@@ -114,7 +133,7 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
                 last_x = x;
                 last_y = y;
                 last_z = z;
-            }
+            }*/
         }
 
     }
