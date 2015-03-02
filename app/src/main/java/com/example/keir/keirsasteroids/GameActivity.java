@@ -22,6 +22,10 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
 
+    private long lastUpdate = 0;
+    private float last_x,last_y,last_z;
+    private static final int SHAKE_THRESHOLD = 600;
+
 
 
     @Override
@@ -88,6 +92,30 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        Sensor mySensor = event.sensor;
+
+        if(mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[2];
+
+            long curTime = System.currentTimeMillis();
+            //keep shake code incase i decide to add some bomb or explosion when the phone is shaked.
+            if((curTime - lastUpdate) > 100){
+                long diffTime = (curTime - lastUpdate);
+                lastUpdate = curTime;
+
+                float speed = Math.abs(x + y + z - last_x - last_y - last_z)/diffTime * 10000;
+
+                if(speed > SHAKE_THRESHOLD){
+                    //if a strong shake happens, do something here.
+                }
+
+                last_x = x;
+                last_y = y;
+                last_z = z;
+            }
+        }
 
     }
 
