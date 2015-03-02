@@ -67,6 +67,10 @@ public class GameRenderer implements Renderer {
         background.loadMesh(vertices, normals, textures, faces);
         // All other game objects will be initialised here
 
+        // load the player mesh & texture
+        player.loadTexture(gl, R.raw.space_frigate_6_color);
+        player.loadMesh(R.raw.space_frigate_6, 0);
+
 
     }
 
@@ -100,9 +104,7 @@ public class GameRenderer implements Renderer {
 
 //All other game drawing will be called here
 
-        // load the player mesh & texture
-        player.loadTexture(gl, R.raw.space_frigate_6_color);
-        player.loadMesh(R.raw.space_frigate_6, 0);
+
         //Render the player object
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
