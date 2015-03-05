@@ -1,8 +1,12 @@
 package com.example.keir.keirsasteroids;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
+import android.util.Log;
+import android.view.Display;
+import android.view.MotionEvent;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -14,14 +18,21 @@ public class GameRenderer implements Renderer {
 
     private GameObject background = new GameObject();
     private float bgScroll = 0f;
+    private float bulletPos = 0.4f;
 
     private float x = 0.5f; // x position of player spacecraft
     private float deltaX = 0f; // increase of x
     private float rot = 0f; // rotation of player spacecraft
     private float deltaRotA = 0f; // increase of rotation - when starting to bank
     private float deltaRotD = 0f;
+    private boolean isShooting;
+    private float H;
 
     private GameObject player = new GameObject();
+
+    private GameObject bullet = new GameObject();
+    private float bulletX = 0f;
+    private float bulletY = 0f;
 
     private float vertices[] = {
             0.0f, 0.0f, 0.0f,
@@ -71,6 +82,10 @@ public class GameRenderer implements Renderer {
         player.loadTexture(gl, R.raw.space_frigate_6_color);
         player.loadMesh(R.raw.space_frigate_6, 0);
 
+        //load bullet
+        bullet.loadTexture(gl,R.drawable.circle);
+        bullet.loadMesh(vertices,normals,textures,faces);
+
 
     }
 
@@ -89,6 +104,8 @@ public class GameRenderer implements Renderer {
         try {
             Thread.sleep(60);
         } catch (InterruptedException e) { }
+
+
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
@@ -102,22 +119,7 @@ public class GameRenderer implements Renderer {
         background.draw(gl);
         gl.glEnable(GL10.GL_LIGHTING);
 
-//All other game drawing will be called here
-
-
-        //Render the player object
-        gl.glMatrixMode(GL10.GL_MODELVIEW);
-        gl.glLoadIdentity();
-        gl.glTranslatef(x, 0.2f, 0.0f);
-        gl.glRotatef(rot, 0.0f, 1.0f, 0.0f);
-        gl.glRotatef(-90, 0.0f, 0.0f, 1.0f);
-        gl.glRotatef(90, 1.0f, 0.0f, 0.0f);
-        gl.glScalef(0.01f, 0.01f, 0.01f);
-
-        gl.glMatrixMode(GL10.GL_TEXTURE);
-        gl.glLoadIdentity();
-
-        player.draw(gl);
+        //All other game drawing will be called here
 
         // x-position
         x += deltaX;
@@ -134,6 +136,50 @@ public class GameRenderer implements Renderer {
             deltaRotD = 0;
         }
 
+        //Render the player object
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glTranslatef(x, 0.2f, 0.0f);
+        gl.glRotatef(rot, 0.0f, 1.0f, 0.0f);
+        gl.glRotatef(-90, 0.0f, 0.0f, 1.0f);
+        gl.glRotatef(90, 1.0f, 0.0f, 0.0f);
+        gl.glScalef(0.01f, 0.01f, 0.01f);
+
+        gl.glMatrixMode(GL10.GL_TEXTURE);
+        gl.glLoadIdentity();
+
+        player.draw(gl);
+
+        if(isShooting) {
+
+            Point size = new Point();
+            GameActivity.display.getSize(size);
+            float W = size.x;
+            H = size.y;
+            //Log.d("Size", "SizeW = " + W);
+            //Log.d("Size", "SizeH = " + H);
+            //render the bullet
+            gl.glMatrixMode(GL10.GL_MODELVIEW);
+            gl.glLoadIdentity();
+            gl.glTranslatef(x, bulletPos, 0.0f);
+            gl.glScalef(0.1f, 0.1f * (W / H), 1.0f);
+            gl.glTranslatef(-0.5f, -0.5f, 0f);
+            gl.glEnable(GL10.GL_BLEND);
+            gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+            gl.glDisable(GL10.GL_LIGHTING);
+            bullet.draw(gl);
+            gl.glDisable(GL10.GL_BLEND);
+            gl.glEnable(GL10.GL_LIGHTING);
+
+        }
+            bulletPos += 0.02f;
+            if (bulletPos > H) {
+                bulletPos = 0.4f;
+            }
+        
+
+
+
     }
 
     public void Bank(int val) {
@@ -146,5 +192,9 @@ public class GameRenderer implements Renderer {
                 deltaRotD = 10;
         else
             deltaRotD = 0;
+    }
+
+    public void Shooting(boolean shoot){
+        isShooting = shoot;
     }
 }

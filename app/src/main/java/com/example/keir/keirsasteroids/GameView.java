@@ -22,5 +22,9 @@ public class GameView extends GLSurfaceView {
         renderer.Bank(val);
     }
 
+    public void Shooting(boolean shoot){
+        renderer.Shooting(shoot);
+    }
+
 
 }

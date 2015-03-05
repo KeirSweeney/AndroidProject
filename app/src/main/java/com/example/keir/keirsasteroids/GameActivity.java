@@ -28,8 +28,10 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
     private static final int SHAKE_THRESHOLD = 600;
 
     public static float tiltX;
-    public static float tiltY;
 
+    public static boolean touched;
+
+    public static Display display;
 
 
     @Override
@@ -41,6 +43,8 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor((Sensor.TYPE_ACCELEROMETER));
         senSensorManager.registerListener(this,senAccelerometer,SensorManager.SENSOR_DELAY_NORMAL);
+
+        display = getWindowManager().getDefaultDisplay();
 
     }
 
@@ -70,26 +74,13 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // get touch positions
-        float x = event.getX();
-        float y = event.getY();
 
-        // Get screen size
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int W = size.x;
-        int H = size.y;
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
-                if (y > H / 2)
-                    if(x < W / 2)
-                        view.Bank(-1);
-                    else
-                        view.Bank(1);
+                view.Shooting(true);
                 break;
             case MotionEvent.ACTION_UP:
-                view.Bank(0);
+                view.Shooting(false);
                 break;
         }
         return false;
@@ -150,6 +141,6 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
 
     protected void onResume(){
         super.onResume();
-        senSensorManager.registerListener(this,senAccelerometer,senSensorManager.SENSOR_DELAY_NORMAL);
+        senSensorManager.registerListener(this,senAccelerometer,SensorManager.SENSOR_DELAY_NORMAL);
     }
 }
