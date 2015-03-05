@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
+import android.os.Debug;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -26,13 +27,18 @@ public class GameRenderer implements Renderer {
     private float deltaRotA = 0f; // increase of rotation - when starting to bank
     private float deltaRotD = 0f;
     private boolean isShooting;
-    private float H;
+
+    private boolean hasShot;
 
     private GameObject player = new GameObject();
 
     private GameObject bullet = new GameObject();
     private float bulletX = 0f;
     private float bulletY = 0f;
+
+    private GameObject asteroid = new GameObject();
+    private float asteroidX = 0.5f;
+    private float asteroidY = 1.0f;
 
     private float vertices[] = {
             0.0f, 0.0f, 0.0f,
@@ -85,6 +91,10 @@ public class GameRenderer implements Renderer {
         //load bullet
         bullet.loadTexture(gl,R.drawable.circle);
         bullet.loadMesh(vertices,normals,textures,faces);
+
+        //load asteroid
+        asteroid.loadTexture(gl,R.drawable.asteroid);
+        asteroid.loadMesh(vertices,normals,textures,faces);
 
 
     }
@@ -151,18 +161,25 @@ public class GameRenderer implements Renderer {
         player.draw(gl);
 
         if(isShooting) {
+            hasShot = true;
+        }
 
-            Point size = new Point();
-            GameActivity.display.getSize(size);
-            float W = size.x;
-            H = size.y;
+        Point size = new Point();
+        GameActivity.display.getSize(size);
+        float W = size.x;
+        float h = size.y;
+
+        //Log.d("Shoot", "Bullet shot " + hasShot);
+        Log.d("Bullet pos", "Bullet distance from top " + (bulletPos));
+        if(hasShot) {
+
             //Log.d("Size", "SizeW = " + W);
             //Log.d("Size", "SizeH = " + H);
             //render the bullet
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
             gl.glTranslatef(x, bulletPos, 0.0f);
-            gl.glScalef(0.1f, 0.1f * (W / H), 1.0f);
+            gl.glScalef(0.05f, 0.05f * (W / h), 1.0f);
             gl.glTranslatef(-0.5f, -0.5f, 0f);
             gl.glEnable(GL10.GL_BLEND);
             gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
@@ -171,15 +188,31 @@ public class GameRenderer implements Renderer {
             gl.glDisable(GL10.GL_BLEND);
             gl.glEnable(GL10.GL_LIGHTING);
 
-        }
             bulletPos += 0.02f;
-            if (bulletPos > H) {
+            if (bulletPos > 1.0f) {
                 bulletPos = 0.4f;
+                hasShot = false;
             }
-        
+        }
 
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glTranslatef(asteroidX, asteroidY, 0.0f);
+        gl.glScalef(0.3f, 0.3f * (W / h), 1.0f);
+        gl.glTranslatef(-0.5f, -0.5f, 0f);
+        gl.glEnable(GL10.GL_BLEND);
+        gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glDisable(GL10.GL_LIGHTING);
+        asteroid.draw(gl);
+        gl.glDisable(GL10.GL_BLEND);
+        gl.glEnable(GL10.GL_LIGHTING);
 
+        asteroidY -= 0.03f;
 
+        if((asteroidX - x) < 0.2 && (asteroidY - 0.4) < 0.2) {
+            Log.d("Collsion", "Asteroid hit!!!!");
+
+        }
     }
 
     public void Bank(int val) {
