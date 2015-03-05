@@ -7,6 +7,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +34,8 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
 
     public static Display display;
 
+    public MediaPlayer mediaPlayer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,10 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
         senSensorManager.registerListener(this,senAccelerometer,SensorManager.SENSOR_DELAY_NORMAL);
 
         display = getWindowManager().getDefaultDisplay();
+
+        mediaPlayer = MediaPlayer.create(GameActivity.this, R.raw.arpanauts);
+        mediaPlayer.start();
+        mediaPlayer.setLooping(true);
 
     }
 
@@ -137,10 +144,12 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
     protected void onPause() {
         super.onPause();
         senSensorManager.unregisterListener(this);
+        mediaPlayer.pause();
     }
 
     protected void onResume(){
         super.onResume();
         senSensorManager.registerListener(this,senAccelerometer,SensorManager.SENSOR_DELAY_NORMAL);
+        mediaPlayer.start();
     }
 }

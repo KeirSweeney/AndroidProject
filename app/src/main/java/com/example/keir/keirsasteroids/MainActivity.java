@@ -1,6 +1,7 @@
 package com.example.keir.keirsasteroids;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,6 +15,13 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+       /* MediaPlayer mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.Arpanauts);
+        mediaPlayer.start();
+        mediaPlayer.setLooping(true);
+        */
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
