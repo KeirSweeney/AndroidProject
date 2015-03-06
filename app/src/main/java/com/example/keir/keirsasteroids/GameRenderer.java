@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.Debug;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -170,11 +171,9 @@ public class GameRenderer implements Renderer {
         float h = size.y;
 
         //Log.d("Shoot", "Bullet shot " + hasShot);
-        Log.d("Bullet pos", "Bullet distance from top " + (bulletPos));
+        //Log.d("Bullet pos", "Bullet distance from top " + (bulletPos));
         if(hasShot) {
 
-            //Log.d("Size", "SizeW = " + W);
-            //Log.d("Size", "SizeH = " + H);
             //render the bullet
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
@@ -207,12 +206,19 @@ public class GameRenderer implements Renderer {
         gl.glDisable(GL10.GL_BLEND);
         gl.glEnable(GL10.GL_LIGHTING);
 
-        asteroidY -= 0.03f;
+        asteroidY -= 0.01f;
 
-        if((asteroidX - x) < 0.2 && (asteroidY - 0.4) < 0.2) {
-            Log.d("Collsion", "Asteroid hit!!!!");
+        float xDist = Math.abs(asteroidX - x);
+        float yDist = Math.abs(asteroidY - 0.4f);
 
+        if(xDist < 0.1 && yDist < 0.1) {
+            if(!shipHit()) {
+                shipHit();
+            }
         }
+
+        Log.d("Collsion", "Asteroid X diff" + xDist);
+        Log.d("Collsion", "Asteroid Y diff" + yDist);
     }
 
     public void Bank(int val) {
@@ -225,6 +231,11 @@ public class GameRenderer implements Renderer {
                 deltaRotD = 10;
         else
             deltaRotD = 0;
+    }
+
+
+    public boolean shipHit() {
+        return true;
     }
 
     public void Shooting(boolean shoot){
