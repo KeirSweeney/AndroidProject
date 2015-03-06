@@ -10,6 +10,9 @@ import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -36,6 +39,7 @@ public class GameRenderer implements Renderer {
     private GameObject bullet = new GameObject();
     private float bulletX = 0f;
     private float bulletY = 0f;
+    public List bulletList = new ArrayList<GameObject>();
 
     private GameObject asteroid = new GameObject();
     private float asteroidX = 0.5f;
@@ -161,8 +165,9 @@ public class GameRenderer implements Renderer {
 
         player.draw(gl);
 
-        if(isShooting) {
+        if(isShooting && hasShot == false) {
             hasShot = true;
+            bulletX = x;
         }
 
         Point size = new Point();
@@ -177,18 +182,20 @@ public class GameRenderer implements Renderer {
             //render the bullet
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
-            gl.glTranslatef(x, bulletPos, 0.0f);
+            gl.glTranslatef(bulletX, bulletPos, 0.0f);
             gl.glScalef(0.05f, 0.05f * (W / h), 1.0f);
             gl.glTranslatef(-0.5f, -0.5f, 0f);
             gl.glEnable(GL10.GL_BLEND);
             gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
             gl.glDisable(GL10.GL_LIGHTING);
-            bullet.draw(gl);
+            bullet.draw(gl); // change it to add it to the list
+            bulletList.add(bullet);
             gl.glDisable(GL10.GL_BLEND);
             gl.glEnable(GL10.GL_LIGHTING);
 
             bulletPos += 0.02f;
             if (bulletPos > 1.0f) {
+                bulletList.remove(bullet);
                 bulletPos = 0.4f;
                 hasShot = false;
             }
@@ -235,6 +242,7 @@ public class GameRenderer implements Renderer {
 
 
     public boolean shipHit() {
+        //destroy the asteroid
         return true;
     }
 
