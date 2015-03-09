@@ -23,7 +23,7 @@ public class GameRenderer implements Renderer {
 
     private GameObject background = new GameObject();
     private float bgScroll = 0f;
-    private float bulletPos = 0.4f;
+
 
     private float x = 0.5f; // x position of player spacecraft
     private float deltaX = 0f; // increase of x
@@ -37,13 +37,17 @@ public class GameRenderer implements Renderer {
     private GameObject player = new GameObject();
 
     private GameObject bullet = new GameObject();
+
     private float bulletX = 0f;
-    private float bulletY = 0f;
+    private float bulletY = 0.4f;
     public List bulletList = new ArrayList<GameObject>();
 
     private GameObject asteroid = new GameObject();
+    public List asteroidList = new ArrayList<GameObject>();
     private float asteroidX = 0.5f;
     private float asteroidY = 1.0f;
+
+    private boolean bulletAsteroidCollision = false;
 
     private float vertices[] = {
             0.0f, 0.0f, 0.0f,
@@ -165,7 +169,7 @@ public class GameRenderer implements Renderer {
 
         player.draw(gl);
 
-        if(isShooting && hasShot == false) {
+        if(isShooting && !hasShot) {
             hasShot = true;
             bulletX = x;
         }
@@ -176,13 +180,13 @@ public class GameRenderer implements Renderer {
         float h = size.y;
 
         //Log.d("Shoot", "Bullet shot " + hasShot);
-        //Log.d("Bullet pos", "Bullet distance from top " + (bulletPos));
+        //Log.d("Bullet pos", "Bullet distance from top " + (bulletY));
         if(hasShot) {
 
             //render the bullet
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
-            gl.glTranslatef(bulletX, bulletPos, 0.0f);
+            gl.glTranslatef(bulletX, bulletY, 0.0f);
             gl.glScalef(0.05f, 0.05f * (W / h), 1.0f);
             gl.glTranslatef(-0.5f, -0.5f, 0f);
             gl.glEnable(GL10.GL_BLEND);
@@ -193,39 +197,62 @@ public class GameRenderer implements Renderer {
             gl.glDisable(GL10.GL_BLEND);
             gl.glEnable(GL10.GL_LIGHTING);
 
-            bulletPos += 0.02f;
-            if (bulletPos > 1.0f) {
+            bulletY += 0.02f;
+
+            float bulletAsteroidX = Math.abs(asteroidX - bulletX);
+            float bulletAsteroidY = Math.abs(asteroidY - bulletY);
+
+            if(bulletAsteroidX < 0.1 && bulletAsteroidY < 0.05) {
+                bulletAsteroidCollision = true;
+                asteroidY = 1.0f;
+                Log.d("Collision", "Bullet asteroid collision");
                 bulletList.remove(bullet);
-                bulletPos = 0.4f;
+                asteroidList.remove(asteroid);
+                bulletY = 0.4f;
+                hasShot = false;
+                bulletAsteroidCollision = false;
+            }
+
+            if (bulletY > 1.0f) {
+                bulletList.remove(bullet);
+                bulletY = 0.4f;
                 hasShot = false;
             }
         }
 
-        gl.glMatrixMode(GL10.GL_MODELVIEW);
-        gl.glLoadIdentity();
-        gl.glTranslatef(asteroidX, asteroidY, 0.0f);
-        gl.glScalef(0.3f, 0.3f * (W / h), 1.0f);
-        gl.glTranslatef(-0.5f, -0.5f, 0f);
-        gl.glEnable(GL10.GL_BLEND);
-        gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-        gl.glDisable(GL10.GL_LIGHTING);
-        asteroid.draw(gl);
-        gl.glDisable(GL10.GL_BLEND);
-        gl.glEnable(GL10.GL_LIGHTING);
+        if(!bulletAsteroidCollision) {
 
-        asteroidY -= 0.01f;
+            gl.glMatrixMode(GL10.GL_MODELVIEW);
+            gl.glLoadIdentity();
+            gl.glTranslatef(asteroidX, asteroidY, 0.0f);
+            gl.glScalef(0.3f, 0.3f * (W / h), 1.0f);
+            gl.glTranslatef(-0.5f, -0.5f, 0f);
+            gl.glEnable(GL10.GL_BLEND);
+            gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+            gl.glDisable(GL10.GL_LIGHTING);
+            asteroidList.add(asteroid);
+            asteroid.draw(gl);
+            gl.glDisable(GL10.GL_BLEND);
+            gl.glEnable(GL10.GL_LIGHTING);
 
-        float xDist = Math.abs(asteroidX - x);
-        float yDist = Math.abs(asteroidY - 0.4f);
+            asteroidY -= 0.01f;
 
-        if(xDist < 0.1 && yDist < 0.1) {
-            if(!shipHit()) {
-                shipHit();
+            float xDist = Math.abs(asteroidX - x);
+            float yDist = Math.abs(asteroidY - 0.4f);
+
+            if (xDist < 0.1 && yDist < 0.1) {
+                if (!shipHit()) {
+                    shipHit();
+                }
+            }
+
+            if (asteroidY < 0f) {
+                asteroidY = 1.0f;
             }
         }
 
-        Log.d("Collsion", "Asteroid X diff" + xDist);
-        Log.d("Collsion", "Asteroid Y diff" + yDist);
+        //Log.d("Collsion", "Asteroid X diff" + xDist);
+        //Log.d("Collsion", "Asteroid Y diff" + yDist);
     }
 
     public void Bank(int val) {
