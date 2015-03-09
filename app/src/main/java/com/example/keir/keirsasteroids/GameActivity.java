@@ -17,10 +17,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 public class GameActivity extends ActionBarActivity implements SensorEventListener{
     private GameView view;
+
+    private TextView myText = null;
 
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
@@ -37,6 +41,9 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
 
     public MediaPlayer mediaPlayer;
 
+    public static Vibrator vibrator;
+
+
 
 
     @Override
@@ -44,6 +51,9 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         view = new GameView(this);
         setContentView(view);
+
+
+        vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor((Sensor.TYPE_ACCELEROMETER));

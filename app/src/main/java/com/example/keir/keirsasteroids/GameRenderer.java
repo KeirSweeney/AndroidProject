@@ -9,6 +9,8 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,8 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by Keir on 23/02/2015.
  */
 public class GameRenderer implements Renderer {
+
+
 
     private GameObject background = new GameObject();
     private float bgScroll = 0f;
@@ -35,7 +39,7 @@ public class GameRenderer implements Renderer {
     private boolean hasShot;
 
     private GameObject player = new GameObject();
-
+    public int health = 100;
     private GameObject bullet = new GameObject();
 
     private float bulletX = 0f;
@@ -48,6 +52,8 @@ public class GameRenderer implements Renderer {
     private float asteroidY = 1.0f;
 
     private boolean bulletAsteroidCollision = false;
+
+
 
     private float vertices[] = {
             0.0f, 0.0f, 0.0f,
@@ -104,6 +110,9 @@ public class GameRenderer implements Renderer {
         //load asteroid
         asteroid.loadTexture(gl,R.drawable.asteroid);
         asteroid.loadMesh(vertices,normals,textures,faces);
+
+        //load static health quad(it doesnt move)
+        
 
 
     }
@@ -222,6 +231,7 @@ public class GameRenderer implements Renderer {
 
         if(!bulletAsteroidCollision) {
 
+
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
             gl.glTranslatef(asteroidX, asteroidY, 0.0f);
@@ -240,10 +250,17 @@ public class GameRenderer implements Renderer {
             float xDist = Math.abs(asteroidX - x);
             float yDist = Math.abs(asteroidY - 0.4f);
 
-            if (xDist < 0.1 && yDist < 0.1) {
-                if (!shipHit()) {
-                    shipHit();
-                }
+            if (xDist < 0.15 && yDist < 0.04) {
+                Log.d("Ship collision", "Ship HIT!");
+                Log.d("Player X", "Player X: " + x);
+                Log.d("Asteroid X", "Asteroid X: " + asteroidX);
+                health -= 10;
+                vibrate();
+                asteroidList.remove(asteroid);
+                asteroidY = 1.0f;
+
+
+
             }
 
             if (asteroidY < 0f) {
@@ -251,8 +268,8 @@ public class GameRenderer implements Renderer {
             }
         }
 
-        //Log.d("Collsion", "Asteroid X diff" + xDist);
-        //Log.d("Collsion", "Asteroid Y diff" + yDist);
+
+
     }
 
     public void Bank(int val) {
@@ -268,12 +285,15 @@ public class GameRenderer implements Renderer {
     }
 
 
-    public boolean shipHit() {
-        //destroy the asteroid
-        return true;
-    }
 
     public void Shooting(boolean shoot){
         isShooting = shoot;
+    }
+
+
+
+    public static void vibrate(){
+        GameActivity.vibrator.vibrate(500);
+        Log.d("Vibrate", "Vibrate");
     }
 }
