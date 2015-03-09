@@ -23,7 +23,7 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class GameRenderer implements Renderer {
 
-
+    Rectangle mRectangle = new Rectangle();
 
     private GameObject background = new GameObject();
     private float bgScroll = 0f;
@@ -52,6 +52,8 @@ public class GameRenderer implements Renderer {
     private float asteroidY = 1.0f;
 
     private boolean bulletAsteroidCollision = false;
+
+    //health bar
 
 
 
@@ -112,7 +114,7 @@ public class GameRenderer implements Renderer {
         asteroid.loadMesh(vertices,normals,textures,faces);
 
         //load static health quad(it doesnt move)
-        
+
 
 
     }
@@ -132,6 +134,9 @@ public class GameRenderer implements Renderer {
         try {
             Thread.sleep(60);
         } catch (InterruptedException e) { }
+
+
+
 
 
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
@@ -163,6 +168,17 @@ public class GameRenderer implements Renderer {
             rot = 0;
             deltaRotD = 0;
         }
+
+        //render the health bar
+        gl.glMatrixMode(GL10.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        gl.glTranslatef(0.5f,1.0f,0.0f);
+        gl.glScalef((health/100.0f) * 0.5f,0.05f,1.0f);
+        gl.glColor4f(0f,1.0f,0f,1.0f);
+        mRectangle.draw(gl);
+        gl.glColor4f(1.0f,1.0f,1.0f,1.0f);
+
+        //health/100 * 0.5
 
         //Render the player object
         gl.glMatrixMode(GL10.GL_MODELVIEW);
