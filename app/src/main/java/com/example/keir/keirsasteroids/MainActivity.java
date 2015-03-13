@@ -9,31 +9,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity {
 
+    public static float myScore = 0f;
+    public static boolean startMainActivity = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-       /* MediaPlayer mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.Arpanauts);
-        mediaPlayer.start();
-        mediaPlayer.setLooping(true);
-        */
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         ImageButton start = (ImageButton)findViewById(R.id.btnStart);
-        //start.setImageResource(R.drawable.start);
+
         ImageButton exit = (ImageButton)findViewById(R.id.btnExit);
-        //exit.setImageResource(R.drawable.exit);
 
-       // ImageView img = new ImageView(this);
-        //img.setImageResource(R.drawable.android_hunter);
-
-        //start.getBackground().setAlpha(0);
         start.setHapticFeedbackEnabled(true);
 
         //exit.getBackground().setAlpha(0);
@@ -54,6 +47,9 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        TextView endScore = (TextView)findViewById(R.id.finalScore);
+        String textToShow = Float.toString(myScore);
+        endScore.setText(textToShow);
     }
 
 
@@ -77,5 +73,10 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static void GameOver(float score) {
+        myScore = score;
+        startMainActivity = true;
     }
 }

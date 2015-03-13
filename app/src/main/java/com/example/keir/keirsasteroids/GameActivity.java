@@ -115,7 +115,7 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
             float absX = Math.abs(tiltX);
             //Log.d("Game","absX = " + absX);
 
-            if(absX < 2.0f){
+            if(absX < 1.5f){
                 view.Bank(0);
             }
             else if(tiltX > 0) {

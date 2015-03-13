@@ -1,6 +1,7 @@
 package com.example.keir.keirsasteroids;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
@@ -55,7 +56,7 @@ public class GameRenderer implements Renderer {
 
     private boolean bulletAsteroidCollision = false;
 
-    public float score = 0;
+    public static float score = 0;
     private boolean randomX = false;
     //health bar
 
@@ -205,9 +206,7 @@ public class GameRenderer implements Renderer {
         float h = size.y;
 
         //Log.d("Shoot", "Bullet shot " + hasShot);
-        //Log.d("Bullet pos", "Bullet distance from top " + (bulletY));
         if(hasShot) {
-
             //render the bullet
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
@@ -272,15 +271,12 @@ public class GameRenderer implements Renderer {
             gl.glDisable(GL10.GL_BLEND);
             gl.glEnable(GL10.GL_LIGHTING);
 
-            asteroidY -= 0.01f;
+            asteroidY -= 0.02f;
 
             float xDist = Math.abs(asteroidX - x);
             float yDist = Math.abs(asteroidY - 0.4f);
 
             if (xDist < 0.15 && yDist < 0.04) {
-                Log.d("Ship collision", "Ship HIT!");
-                Log.d("Player X", "Player X: " + x);
-                Log.d("Asteroid X", "Asteroid X: " + asteroidX);
                 health -= 10;
                 vibrate();
                 asteroidList.remove(asteroid);
@@ -295,7 +291,7 @@ public class GameRenderer implements Renderer {
         }
 
         if(health <= 0) {
-            GameOver();
+            MainActivity.GameOver(score);
         }
 
 
@@ -326,10 +322,6 @@ public class GameRenderer implements Renderer {
         Log.d("Vibrate", "Vibrate");
     }
 
-    public void GameOver()
-    {
-
-    }
 
     public static double randDouble() {
 
