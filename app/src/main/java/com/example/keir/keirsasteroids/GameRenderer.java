@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -45,6 +46,7 @@ public class GameRenderer implements Renderer {
     private float bulletX = 0f;
     private float bulletY = 0.4f;
     public List bulletList = new ArrayList<GameObject>();
+    public static boolean bulletSound = false;
 
     private GameObject asteroid = new GameObject();
     public List asteroidList = new ArrayList<GameObject>();
@@ -53,6 +55,8 @@ public class GameRenderer implements Renderer {
 
     private boolean bulletAsteroidCollision = false;
 
+    public float score = 0;
+    private boolean randomX = false;
     //health bar
 
 
@@ -135,10 +139,6 @@ public class GameRenderer implements Renderer {
             Thread.sleep(60);
         } catch (InterruptedException e) { }
 
-
-
-
-
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
@@ -219,15 +219,18 @@ public class GameRenderer implements Renderer {
             gl.glDisable(GL10.GL_LIGHTING);
             bullet.draw(gl); // change it to add it to the list
             bulletList.add(bullet);
+            bulletSound = true;
             gl.glDisable(GL10.GL_BLEND);
             gl.glEnable(GL10.GL_LIGHTING);
+            //make shooting sound
 
             bulletY += 0.02f;
+
 
             float bulletAsteroidX = Math.abs(asteroidX - bulletX);
             float bulletAsteroidY = Math.abs(asteroidY - bulletY);
 
-            if(bulletAsteroidX < 0.1 && bulletAsteroidY < 0.05) {
+            if(bulletAsteroidX < 0.1 && bulletAsteroidY < 0.04) {
                 bulletAsteroidCollision = true;
                 asteroidY = 1.0f;
                 Log.d("Collision", "Bullet asteroid collision");
@@ -235,6 +238,8 @@ public class GameRenderer implements Renderer {
                 asteroidList.remove(asteroid);
                 bulletY = 0.4f;
                 hasShot = false;
+                bulletSound = false;
+                score += 5;
                 bulletAsteroidCollision = false;
             }
 
@@ -242,11 +247,17 @@ public class GameRenderer implements Renderer {
                 bulletList.remove(bullet);
                 bulletY = 0.4f;
                 hasShot = false;
+                bulletSound = false;
             }
         }
 
         if(!bulletAsteroidCollision) {
 
+            if(!randomX) {
+                double thisX = randDouble();
+                asteroidX = (float)thisX;
+                randomX = true;
+            }
 
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
@@ -274,16 +285,18 @@ public class GameRenderer implements Renderer {
                 vibrate();
                 asteroidList.remove(asteroid);
                 asteroidY = 1.0f;
-
-
-
+                randomX = false;
             }
 
             if (asteroidY < 0f) {
                 asteroidY = 1.0f;
+                randomX = false;
             }
         }
 
+        if(health <= 0) {
+            GameOver();
+        }
 
 
     }
@@ -312,4 +325,23 @@ public class GameRenderer implements Renderer {
         GameActivity.vibrator.vibrate(500);
         Log.d("Vibrate", "Vibrate");
     }
+
+    public void GameOver()
+    {
+
+    }
+
+    public static double randDouble() {
+
+        // Usually this can be a field rather than a method variable
+        Random rand = new Random();
+
+        // nextInt is normally exclusive of the top value,
+        // so add 1 to make it inclusive
+        double randomNum = rand.nextDouble();
+
+        return randomNum;
+    }
+
+
 }

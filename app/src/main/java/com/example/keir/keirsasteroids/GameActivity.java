@@ -1,8 +1,6 @@
 package com.example.keir.keirsasteroids;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -11,13 +9,10 @@ import android.media.MediaPlayer;
 import android.os.Vibrator;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -39,7 +34,8 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
 
     public static Display display;
 
-    public MediaPlayer mediaPlayer;
+    public MediaPlayer BGmediaPlayer;
+    public MediaPlayer shootMediaPlayer;
 
     public static Vibrator vibrator;
 
@@ -61,10 +57,12 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
 
         display = getWindowManager().getDefaultDisplay();
 
-        mediaPlayer = MediaPlayer.create(GameActivity.this, R.raw.arpanauts);
-        mediaPlayer.start();
-        mediaPlayer.setLooping(true);
+        BGmediaPlayer = MediaPlayer.create(GameActivity.this, R.raw.arpanauts);
+        BGmediaPlayer.start();
+        BGmediaPlayer.setLooping(true);
 
+        shootMediaPlayer = MediaPlayer.create(GameActivity.this, R.raw.lasershoot);
+        shootMediaPlayer.setLooping(false);
     }
 
 
@@ -97,6 +95,9 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 view.Shooting(true);
+                if(!GameRenderer.bulletSound) {
+                    shootMediaPlayer.start();
+                }
                 break;
             case MotionEvent.ACTION_UP:
                 view.Shooting(false);
@@ -156,12 +157,12 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
     protected void onPause() {
         super.onPause();
         senSensorManager.unregisterListener(this);
-        mediaPlayer.pause();
+        BGmediaPlayer.pause();
     }
 
     protected void onResume(){
         super.onResume();
         senSensorManager.registerListener(this,senAccelerometer,SensorManager.SENSOR_DELAY_NORMAL);
-        mediaPlayer.start();
+        BGmediaPlayer.start();
     }
 }
