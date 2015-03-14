@@ -44,6 +44,7 @@ public class GameRenderer implements Renderer {
     private boolean hasShot;
 
     private GameObject player = new GameObject();
+    private float playerRad = 0.15f;
     public int health = 100;
     private GameObject bullet = new GameObject();
     private int maxBullet = 5;
@@ -127,13 +128,6 @@ public class GameRenderer implements Renderer {
         //load asteroid
         asteroid.loadTexture(gl,R.drawable.asteroid);
         asteroid.loadMesh(vertices,normals,textures,faces);
-
-        //load static health quad(it doesnt move)
-
-
-
-
-
     }
 
     @Override
@@ -142,7 +136,6 @@ public class GameRenderer implements Renderer {
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glLoadIdentity();
         gl.glOrthof(0f, 1f, 0f, 1f, -10f, 10f);
-
     }
 
     @Override
@@ -207,11 +200,6 @@ public class GameRenderer implements Renderer {
 
         player.draw(gl);
 
-        /*if(isShooting && !hasShot) {
-            hasShot = true;
-            bulletX = x;
-        }*/
-
         Point size = new Point();
         GameActivity.display.getSize(size);
         float W = size.x;
@@ -271,12 +259,11 @@ public class GameRenderer implements Renderer {
         a.vy = 0.01f;
 
         if(asteroids.size() < maxAsteroid) {
+            randomX = true;
             asteroids.add(a);
         }
 
         ListIterator<Asteroid> ia = asteroids.listIterator();
-
-
 
             while (ia.hasNext()) {
                 Asteroid ma = ia.next();
@@ -284,8 +271,6 @@ public class GameRenderer implements Renderer {
                 if(randomX && asteroids.size() != maxAsteroid) {
                     double thisX = randDouble();
                     ma.x = (float)thisX;
-
-
                 }
                 else {
                     randomX = false;
@@ -313,6 +298,16 @@ public class GameRenderer implements Renderer {
                 float dy = y - ma.y;
                 float dx = x - ma.x;
 
+                double d = Math.sqrt(dx * dx + dy * dy);
+
+
+
+                if((float)d < (asteroidRad + playerRad)) {
+                    health -= 10;
+                    ia.remove();
+                    vibrate();
+                    continue;
+                }
 
             }
 
