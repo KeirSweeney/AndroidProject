@@ -45,10 +45,9 @@ public class GameRenderer implements Renderer {
     private GameObject player = new GameObject();
     public int health = 100;
     private GameObject bullet = new GameObject();
+    private int maxBullet = 5;
 
-    private float bulletX = 0f;
-    private float bulletY = 0.4f;
-    public List bulletList = new ArrayList<GameObject>();
+
     public static boolean bulletSound = false;
 
     private GameObject asteroid = new GameObject();
@@ -65,6 +64,7 @@ public class GameRenderer implements Renderer {
 
     //asteroid Instancing
     private LinkedList<Asteroid> asteroids = new LinkedList<>();
+    private LinkedList<Bullet> bullets = new LinkedList<>();
 
 
 
@@ -204,10 +204,10 @@ public class GameRenderer implements Renderer {
 
         player.draw(gl);
 
-        if(isShooting && !hasShot) {
+        /*if(isShooting && !hasShot) {
             hasShot = true;
             bulletX = x;
-        }
+        }*/
 
         Point size = new Point();
         GameActivity.display.getSize(size);
@@ -215,7 +215,7 @@ public class GameRenderer implements Renderer {
         float h = size.y;
 
         //Log.d("Shoot", "Bullet shot " + hasShot);
-        if(hasShot) {
+        /*if(hasShot) {
             //render the bullet
             gl.glMatrixMode(GL10.GL_MODELVIEW);
             gl.glLoadIdentity();
@@ -257,7 +257,7 @@ public class GameRenderer implements Renderer {
                 hasShot = false;
                 bulletSound = false;
             }
-        }
+        } */
 
         //if(!bulletAsteroidCollision) {
 
@@ -272,6 +272,7 @@ public class GameRenderer implements Renderer {
         }
 
         ListIterator<Asteroid> ia = asteroids.listIterator();
+
 
 
             while (ia.hasNext()) {
@@ -305,9 +306,42 @@ public class GameRenderer implements Renderer {
 
 
                 ma.y -= a.vy;
+            }
 
 
 
+        Bullet b = new Bullet();
+        b.y = 0.4f;
+        if(isShooting) {
+            b.x = x;
+            bullets.add(b);
+        }
+
+        ListIterator<Bullet> ib = bullets.listIterator();
+
+            while (ib.hasNext()) {
+                Bullet mb = ib.next();
+
+                gl.glMatrixMode(GL10.GL_MODELVIEW);
+                gl.glLoadIdentity();
+                gl.glTranslatef(mb.x, mb.y, 1.0f);
+                gl.glScalef(0.05f, 0.05f * (W / h), 1.0f);
+                gl.glTranslatef(-0.5f, -0.5f, 0f);
+                gl.glEnable(GL10.GL_BLEND);
+                gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+                gl.glDisable(GL10.GL_LIGHTING);
+                gl.glDisable(GL10.GL_DEPTH_TEST);
+                gl.glDisable(GL10.GL_DEPTH_TEST);
+
+                bullet.draw(gl);
+
+                gl.glEnable(GL10.GL_DEPTH_TEST);
+                gl.glEnable(GL10.GL_DEPTH_TEST);
+                gl.glDisable(GL10.GL_BLEND);
+                gl.glEnable(GL10.GL_LIGHTING);
+
+                mb.vy = 0.01f;
+                mb.y += mb.vy;
             }
 
 
