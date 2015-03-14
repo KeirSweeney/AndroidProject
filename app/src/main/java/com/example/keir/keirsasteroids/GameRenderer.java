@@ -70,9 +70,6 @@ public class GameRenderer implements Renderer {
     private LinkedList<Asteroid> asteroids = new LinkedList<>();
     private LinkedList<Bullet> bullets = new LinkedList<>();
 
-
-
-
     private float vertices[] = {
             0.0f, 0.0f, 0.0f,
             1.0f, 0.0f, 0.0f,
@@ -204,53 +201,6 @@ public class GameRenderer implements Renderer {
         GameActivity.display.getSize(size);
         float W = size.x;
         float h = size.y;
-
-        //Log.d("Shoot", "Bullet shot " + hasShot);
-        /*if(hasShot) {
-            //render the bullet
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-            gl.glLoadIdentity();
-            gl.glTranslatef(bulletX, bulletY, 0.0f);
-            gl.glScalef(0.05f, 0.05f * (W / h), 1.0f);
-            gl.glTranslatef(-0.5f, -0.5f, 0f);
-            gl.glEnable(GL10.GL_BLEND);
-            gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-            gl.glDisable(GL10.GL_LIGHTING);
-            bullet.draw(gl); // change it to add it to the list
-            bulletList.add(bullet);
-            bulletSound = true;
-            gl.glDisable(GL10.GL_BLEND);
-            gl.glEnable(GL10.GL_LIGHTING);
-            //make shooting sound
-
-            bulletY += 0.02f;
-
-
-            float bulletAsteroidX = Math.abs(asteroidX - bulletX);
-            float bulletAsteroidY = Math.abs(asteroidY - bulletY);
-
-            if(bulletAsteroidX < 0.1 && bulletAsteroidY < 0.04) {
-                bulletAsteroidCollision = true;
-                asteroidY = 1.0f;
-                Log.d("Collision", "Bullet asteroid collision");
-                bulletList.remove(bullet);
-
-                bulletY = 0.4f;
-                hasShot = false;
-                bulletSound = false;
-                score += 5;
-                bulletAsteroidCollision = false;
-            }
-
-            if (bulletY > 1.0f) {
-                bulletList.remove(bullet);
-                bulletY = 0.4f;
-                hasShot = false;
-                bulletSound = false;
-            }
-        } */
-
-        //if(!bulletAsteroidCollision) {
 
         Asteroid a = new Asteroid();
 
