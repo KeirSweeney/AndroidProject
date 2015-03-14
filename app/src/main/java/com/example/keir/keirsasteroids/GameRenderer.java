@@ -14,7 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -50,15 +52,20 @@ public class GameRenderer implements Renderer {
     public static boolean bulletSound = false;
 
     private GameObject asteroid = new GameObject();
-    public List asteroidList = new ArrayList<GameObject>();
+
     private float asteroidX = 0.5f;
     private float asteroidY = 1.0f;
+    private int maxAsteroid = 3;
 
     private boolean bulletAsteroidCollision = false;
 
     public static float score = 0;
-    private boolean randomX = false;
+    private boolean randomX = true;
     //health bar
+
+    //asteroid Instancing
+    private LinkedList<Asteroid> asteroids = new LinkedList<>();
+
 
 
 
@@ -119,6 +126,8 @@ public class GameRenderer implements Renderer {
         asteroid.loadMesh(vertices,normals,textures,faces);
 
         //load static health quad(it doesnt move)
+
+
 
 
 
@@ -234,7 +243,7 @@ public class GameRenderer implements Renderer {
                 asteroidY = 1.0f;
                 Log.d("Collision", "Bullet asteroid collision");
                 bulletList.remove(bullet);
-                asteroidList.remove(asteroid);
+
                 bulletY = 0.4f;
                 hasShot = false;
                 bulletSound = false;
@@ -250,8 +259,60 @@ public class GameRenderer implements Renderer {
             }
         }
 
-        if(!bulletAsteroidCollision) {
+        //if(!bulletAsteroidCollision) {
 
+        Asteroid a = new Asteroid();
+
+        a.y = 1.0f;
+        a.x = 0.5f;
+        a.vy = 0.01f;
+
+        if(asteroids.size() < maxAsteroid) {
+            asteroids.add(a);
+        }
+
+        ListIterator<Asteroid> ia = asteroids.listIterator();
+
+
+            while (ia.hasNext()) {
+                Asteroid ma = ia.next();
+
+                if(randomX && asteroids.size() != maxAsteroid) {
+                    double thisX = randDouble();
+                    ma.x = (float)thisX;
+                    Log.d("rand", "RAND!");
+
+                }
+                else {
+                    randomX = false;
+                }
+
+                gl.glMatrixMode(GL10.GL_MODELVIEW);
+                gl.glLoadIdentity();
+                gl.glTranslatef(ma.x, ma.y, 1.0f);
+                gl.glScalef(0.3f, 0.3f * (W / h), 1.0f);
+                gl.glTranslatef(-0.5f, -0.5f, 0f);
+                gl.glEnable(GL10.GL_BLEND);
+                gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+                gl.glDisable(GL10.GL_LIGHTING);
+                gl.glDisable(GL10.GL_DEPTH_TEST);
+
+                asteroid.draw(gl);
+
+                gl.glEnable(GL10.GL_DEPTH_TEST);
+                gl.glDisable(GL10.GL_BLEND);
+                gl.glEnable(GL10.GL_LIGHTING);
+
+
+                ma.y -= a.vy;
+
+
+
+            }
+
+
+
+            /*
             if(!randomX) {
                 double thisX = randDouble();
                 asteroidX = (float)thisX;
@@ -266,7 +327,7 @@ public class GameRenderer implements Renderer {
             gl.glEnable(GL10.GL_BLEND);
             gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
             gl.glDisable(GL10.GL_LIGHTING);
-            asteroidList.add(asteroid);
+
             asteroid.draw(gl);
             gl.glDisable(GL10.GL_BLEND);
             gl.glEnable(GL10.GL_LIGHTING);
@@ -279,7 +340,7 @@ public class GameRenderer implements Renderer {
             if (xDist < 0.15 && yDist < 0.04) {
                 health -= 10;
                 vibrate();
-                asteroidList.remove(asteroid);
+
                 asteroidY = 1.0f;
                 randomX = false;
             }
@@ -287,8 +348,8 @@ public class GameRenderer implements Renderer {
             if (asteroidY < 0f) {
                 asteroidY = 1.0f;
                 randomX = false;
-            }
-        }
+            }*/
+        //}
 
         if(health <= 0) {
             MainActivity.GameOver(score);
