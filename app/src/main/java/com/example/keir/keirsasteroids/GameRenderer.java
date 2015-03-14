@@ -47,13 +47,13 @@ public class GameRenderer implements Renderer {
     public int health = 100;
     private GameObject bullet = new GameObject();
     private int maxBullet = 5;
-    private float bulletRad = 0.05f;
+    private float bulletRad = 0.01f;
 
 
     public static boolean bulletSound = false;
 
     private GameObject asteroid = new GameObject();
-    private float asteroidRad = 0.15f;
+    private float asteroidRad = 0.05f;
 
     private float asteroidX = 0.5f;
     private float asteroidY = 1.0f;
@@ -364,17 +364,11 @@ public class GameRenderer implements Renderer {
 
                     if((float)d < (asteroidRad + bulletRad)) {
                         Log.d("collsion", "collision!");
-
+                        ib.remove();
+                        ya.remove();
+                        continue;
                     }
-
-
-
                 }
-
-
-
-
-
             }
 
 
