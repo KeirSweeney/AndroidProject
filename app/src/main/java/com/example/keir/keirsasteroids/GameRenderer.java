@@ -34,6 +34,7 @@ public class GameRenderer implements Renderer {
 
 
     private float x = 0.5f; // x position of player spacecraft
+    private float y = 0.2f; // ypos of player
     private float deltaX = 0f; // increase of x
     private float rot = 0f; // rotation of player spacecraft
     private float deltaRotA = 0f; // increase of rotation - when starting to bank
@@ -46,11 +47,13 @@ public class GameRenderer implements Renderer {
     public int health = 100;
     private GameObject bullet = new GameObject();
     private int maxBullet = 5;
+    private float bulletRad = 0.05f;
 
 
     public static boolean bulletSound = false;
 
     private GameObject asteroid = new GameObject();
+    private float asteroidRad = 0.15f;
 
     private float asteroidX = 0.5f;
     private float asteroidY = 1.0f;
@@ -281,7 +284,7 @@ public class GameRenderer implements Renderer {
                 if(randomX && asteroids.size() != maxAsteroid) {
                     double thisX = randDouble();
                     ma.x = (float)thisX;
-                    Log.d("rand", "RAND!");
+
 
                 }
                 else {
@@ -306,6 +309,11 @@ public class GameRenderer implements Renderer {
 
 
                 ma.y -= a.vy;
+
+                float dy = y - ma.y;
+                float dx = x - ma.x;
+
+
             }
 
 
@@ -342,6 +350,31 @@ public class GameRenderer implements Renderer {
 
                 mb.vy = 0.01f;
                 mb.y += mb.vy;
+
+                ListIterator<Asteroid> ya = asteroids.listIterator();
+
+                while (ya.hasNext()) {
+                    Asteroid ta = ya.next();
+
+                    float dx = mb.x - ta.x;
+                    float dy = mb.y - ta.y;
+
+                    double d = Math.sqrt(dx * dx + dy * dy);
+
+
+                    if((float)d < (asteroidRad + bulletRad)) {
+                        Log.d("collsion", "collision!");
+
+                    }
+
+
+
+                }
+
+
+
+
+
             }
 
 
