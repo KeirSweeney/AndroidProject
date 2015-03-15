@@ -178,7 +178,10 @@ public class GameRenderer implements Renderer {
         gl.glTranslatef(0.5f,1.0f,0.0f);
         gl.glScalef((health/100.0f) * 0.5f,0.05f,1.0f);
         gl.glColor4f(0f,1.0f,0f,1.0f);
+        gl.glEnable(GL10.GL_BLEND);
+        gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
         mRectangle.draw(gl);
+        gl.glDisable(GL10.GL_BLEND);
         gl.glColor4f(1.0f,1.0f,1.0f,1.0f);
 
         //health/100 * 0.5
@@ -256,6 +259,11 @@ public class GameRenderer implements Renderer {
                     health -= 10;
                     ia.remove();
                     vibrate();
+                    continue;
+                }
+
+                if(ma.y <= 0f) {
+                    ia.remove();
                     continue;
                 }
 
