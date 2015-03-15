@@ -124,27 +124,6 @@ public class GameActivity extends ActionBarActivity implements SensorEventListen
             else{
                 view.Bank(+1);
             }
-
-           /* float x = event.values[0];
-            float y = event.values[1];
-            float z = event.values[2];
-
-            long curTime = System.currentTimeMillis();
-            //keep shake code in case i decide to add some bomb or explosion when the phone is shaked.
-            if((curTime - lastUpdate) > 100){
-                long diffTime = (curTime - lastUpdate);
-                lastUpdate = curTime;
-
-                float speed = Math.abs(x + y + z - last_x - last_y - last_z)/diffTime * 10000;
-
-                if(speed > SHAKE_THRESHOLD){
-                    //if a strong shake happens, do something here.
-                }
-
-                last_x = x;
-                last_y = y;
-                last_z = z;
-            }*/
         }
 
     }

@@ -308,7 +308,7 @@ public class GameRenderer implements Renderer {
 
 
                     if((float)d < (asteroidRad + bulletRad)) {
-                        Log.d("collsion", "collision!");
+                        score += 10;
                         ib.remove();
                         ya.remove();
                         continue;
@@ -316,49 +316,13 @@ public class GameRenderer implements Renderer {
                 }
             }
 
-
-
-            /*
-            if(!randomX) {
-                double thisX = randDouble();
-                asteroidX = (float)thisX;
-                randomX = true;
-            }
-
-            gl.glMatrixMode(GL10.GL_MODELVIEW);
-            gl.glLoadIdentity();
-            gl.glTranslatef(asteroidX, asteroidY, 0.0f);
-            gl.glScalef(0.3f, 0.3f * (W / h), 1.0f);
-            gl.glTranslatef(-0.5f, -0.5f, 0f);
-            gl.glEnable(GL10.GL_BLEND);
-            gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-            gl.glDisable(GL10.GL_LIGHTING);
-
-            asteroid.draw(gl);
-            gl.glDisable(GL10.GL_BLEND);
-            gl.glEnable(GL10.GL_LIGHTING);
-
-            asteroidY -= 0.02f;
-
-            float xDist = Math.abs(asteroidX - x);
-            float yDist = Math.abs(asteroidY - 0.4f);
-
-            if (xDist < 0.15 && yDist < 0.04) {
-                health -= 10;
-                vibrate();
-
-                asteroidY = 1.0f;
-                randomX = false;
-            }
-
-            if (asteroidY < 0f) {
-                asteroidY = 1.0f;
-                randomX = false;
-            }*/
-        //}
-
         if(health <= 0) {
-            MainActivity.GameOver(score);
+
+            GameOver.textToShow = Float.toString(score);
+
+            Intent gameOver = new Intent(GameView.context.getApplicationContext(), GameOver.class);
+            GameView.context.startActivity(gameOver);
+            GameView.context.finish();
         }
 
 
@@ -386,7 +350,6 @@ public class GameRenderer implements Renderer {
 
     public static void vibrate(){
         GameActivity.vibrator.vibrate(500);
-        Log.d("Vibrate", "Vibrate");
     }
 
 

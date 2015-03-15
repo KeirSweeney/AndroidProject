@@ -8,9 +8,9 @@ import android.opengl.GLSurfaceView;
  */
 public class GameView extends GLSurfaceView {
     private GameRenderer renderer;
-    public static Context context;
+    public static GameActivity context;
 
-    public GameView(Context context) {
+    public GameView(GameActivity context) {
         super(context);
         renderer = new GameRenderer();
         this.setRenderer((Renderer) renderer);
