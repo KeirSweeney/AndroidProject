@@ -1,17 +1,41 @@
 package com.example.keir.keirsasteroids;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 
 public class GameOver extends ActionBarActivity {
+
+    public static float myScore = 0f;
+    public static boolean startMainActivity = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_over);
+
+        ImageButton start = (ImageButton)findViewById(R.id.btnStart);
+
+        start.setHapticFeedbackEnabled(true);
+
+        start.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent game = new Intent(getApplicationContext(), GameActivity.class);
+                startActivity(game);
+            }
+        });
+
+
+        TextView endScore = (TextView)findViewById(R.id.finalScore);
+        String textToShow = Float.toString(myScore);
+        endScore.setText(textToShow);
     }
 
 
@@ -36,4 +60,12 @@ public class GameOver extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public static void GameOver(float score) {
+        myScore = score;
+        startMainActivity = true;
+    }
+
+
 }
+

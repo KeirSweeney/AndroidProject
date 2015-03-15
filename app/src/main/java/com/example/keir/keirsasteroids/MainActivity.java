@@ -14,8 +14,7 @@ import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {
 
-    public static float myScore = 0f;
-    public static boolean startMainActivity = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +46,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        TextView endScore = (TextView)findViewById(R.id.finalScore);
-        String textToShow = Float.toString(myScore);
-        endScore.setText(textToShow);
+
     }
 
 
@@ -75,8 +72,5 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static void GameOver(float score) {
-        myScore = score;
-        startMainActivity = true;
-    }
+
 }

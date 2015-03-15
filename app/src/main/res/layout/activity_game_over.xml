@@ -4,9 +4,49 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.example.keir.keirsasteroids.GameOver">
+    tools:context="com.example.keir.keirsasteroids.GameOver"
+    android:padding="0dp">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/android_hunter"
+        android:layout_alignParentTop="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton"
+        android:background="@drawable/start"
+        android:layout_marginTop="74dp"
+        android:layout_below="@+id/Score"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Score"
+        android:text="Score: "
+        android:textColor="#FFFFFF"
+        android:textSize="40dp"
+        android:layout_marginLeft="61dp"
+        android:layout_marginStart="61dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/FinalScore"
+        android:layout_alignTop="@+id/Score"
+        android:layout_toRightOf="@+id/Score"
+        android:layout_toEndOf="@+id/Score"
+        android:textSize="40dp"
+        android:textColor="#FFFFFF" />
 
 </RelativeLayout>
