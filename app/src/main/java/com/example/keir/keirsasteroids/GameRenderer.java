@@ -48,17 +48,17 @@ public class GameRenderer implements Renderer {
     public int health = 100;
     private GameObject bullet = new GameObject();
     private int maxBullet = 5;
-    private float bulletRad = 0.01f;
+    private float bulletRad = 0.0125f;
 
 
     public static boolean bulletSound = false;
 
     private GameObject asteroid = new GameObject();
-    private float asteroidRad = 0.05f;
+    private float asteroidRad = 0.075f;
 
     private float asteroidX = 0.5f;
     private float asteroidY = 1.0f;
-    private int maxAsteroid = 3;
+    private int maxAsteroid = 5;
 
     private boolean bulletAsteroidCollision = false;
 
@@ -209,9 +209,21 @@ public class GameRenderer implements Renderer {
 
         a.y = 1.0f;
         a.x = 0.5f;
-        a.vy = 0.01f;
+        a.vy = 0.01f + (bgScroll * 0.01f);
 
         if(asteroids.size() < maxAsteroid) {
+            randLoop:
+            for(int i =0; i <100;i++) {
+                a.x = (float)randDouble();
+                ListIterator<Asteroid> mya = asteroids.listIterator();
+                while(mya.hasNext()) {
+                    float thisPos = mya.next().x;
+
+                    if(Math.abs(a.x - thisPos) > asteroidRad) {
+                        break randLoop;
+                    }
+                }
+            }
             randomX = true;
             asteroids.add(a);
         }
@@ -221,13 +233,7 @@ public class GameRenderer implements Renderer {
             while (ia.hasNext()) {
                 Asteroid ma = ia.next();
 
-                if(randomX && asteroids.size() != maxAsteroid) {
-                    double thisX = randDouble();
-                    ma.x = (float)thisX;
-                }
-                else {
-                    randomX = false;
-                }
+
 
                 gl.glMatrixMode(GL10.GL_MODELVIEW);
                 gl.glLoadIdentity();
@@ -244,7 +250,6 @@ public class GameRenderer implements Renderer {
                 gl.glEnable(GL10.GL_DEPTH_TEST);
                 gl.glDisable(GL10.GL_BLEND);
                 gl.glEnable(GL10.GL_LIGHTING);
-
 
                 ma.y -= a.vy;
 
@@ -273,7 +278,7 @@ public class GameRenderer implements Renderer {
 
         Bullet b = new Bullet();
         b.y = 0.4f;
-        if(isShooting) {
+        if(isShooting && bullets.size() < 10) {
             b.x = x;
             bullets.add(b);
         }
@@ -304,7 +309,12 @@ public class GameRenderer implements Renderer {
                 mb.vy = 0.01f;
                 mb.y += mb.vy;
 
+                if(mb.y >= 1.0f) {
+                    ib.remove();
+                }
+
                 ListIterator<Asteroid> ya = asteroids.listIterator();
+
 
                 while (ya.hasNext()) {
                     Asteroid ta = ya.next();
@@ -317,9 +327,10 @@ public class GameRenderer implements Renderer {
 
                     if((float)d < (asteroidRad + bulletRad)) {
                         score += 10;
-                        ib.remove();
                         ya.remove();
-                        continue;
+                        ib.remove();
+
+                        break;
                     }
                 }
             }
